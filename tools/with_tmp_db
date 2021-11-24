@@ -26,7 +26,9 @@ export PGHOST=""
 export PGPORT="$((${maxport:-5431} + 1))"
 
 # hook into docker_ scripts
+# shellcheck disable=SC2034
 POSTGRES_INITDB_ARGS="--no-locale --nosync --auth=trust"
+# shellcheck disable=SC2034
 POSTGRES_USER=postgres
 docker_init_database_dir > "$tmpdir/initdb.log"
 docker_temp_server_start > "$tmpdir/start.log"
