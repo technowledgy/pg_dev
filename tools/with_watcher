@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#
+# USAGE:
+# while_watching <command>
+# The command is executed and restarted with SIGTERM when any file in the current workdir changes.
+#
+set -Eeuo pipefail
+
+while true; do
+  (! ag -l . | entr -dr "$@")
+done

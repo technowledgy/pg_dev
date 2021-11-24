@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# USAGE:
+# echo "<sql>" | with_tmp_db <command>
+# The SQL code is used for database initialization.
+# The command is executed with postgres available. PGHOST and PGPORT are set accordingly.
+# The database is shutdown and the cluster removed when the script exits.
+#
+set -Eeo pipefail
+
+source "$(which docker-entrypoint.sh)"
+
+tmpdir="$(mktemp -d)"
+
+# finds the max port number of currently active postgresql sockets
+function find_max_port() {
+  find /var/run/postgresql -maxdepth 1 -type s \
+  | sed -re 's/^.*\.([0-9]+)$/\1/g' \
+  | sort -nr \
+  | head -n1
+}
+maxport="$(find_max_port)"
+
+export PGDATA="$tmpdir/data"
+export PGHOST=""
+export PGPORT="$((${maxport:-5431} + 1))"
+
+# hook into docker_ scripts
+POSTGRES_INITDB_ARGS="--no-locale --nosync --auth=trust"
+POSTGRES_USER=postgres
+docker_init_database_dir > "$tmpdir/initdb.log"
+docker_temp_server_start > "$tmpdir/start.log"
+
+function cleanup() {
+  docker_temp_server_stop > "$tmpdir/stop.log"
+  rm -rf "$PGDATA"
+}
+trap cleanup EXIT
+
+docker_process_sql -f /dev/stdin
+
+("$@")
