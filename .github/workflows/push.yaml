@@ -47,3 +47,14 @@ jobs:
           build-args: PG_VERSION=${{ matrix.version }}
           push: true
           tags: technowledgy/pg_dev:${{ matrix.version }}-alpine
+
+  dockerhub:
+    needs: build-test-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - name: Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v2.4.3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
