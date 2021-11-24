@@ -13,3 +13,8 @@ services:
     image: koalaman/shellcheck:v0.8.0
     volumes:
       - ./:/mnt
+
+  pg_dev:
+    build: .
+    volumes:
+      - ./:/usr/src
