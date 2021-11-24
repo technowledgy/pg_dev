@@ -22,8 +22,13 @@ RUN apk add \
   ; apk add \
         --no-cache \
         --virtual build-deps \
+        clang \
+        gcc \
         git \
+        icu-dev \
+        llvm \
         make \
+        musl-dev \
         patch \
         perl \
         perl-module-build \
@@ -47,6 +52,14 @@ RUN apk add \
    ; chown -R postgres . \
    ; su-exec postgres sh -c 'echo "" | with_tmp_db make installcheck' \
    ; su-exec postgres sh -c 'echo "CREATE EXTENSION pgtap;" | with_tmp_db make test' \
+    ) \
+### plpgsql_check
+  ; git clone --depth 1 --branch master https://github.com/okbob/plpgsql_check \
+  ; (cd plpgsql_check \
+   ; CFLAGS=-Wno-unused-parameter make \
+   ; make install \
+   ; chown -R postgres . \
+   ; su-exec postgres sh -c 'echo "" | with_tmp_db make installcheck' \
     ) \
 ### cleanup
   ; rm -rf -- * \

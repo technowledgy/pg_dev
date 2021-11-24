@@ -21,5 +21,10 @@ cat - "$schema" <<EOF \
 
 CREATE SCHEMA pgtap;
 CREATE EXTENSION pgtap WITH SCHEMA pgtap;
-ALTER ROLE CURRENT_USER SET search_path=pgtap,public;
+ALTER ROLE CURRENT_USER SET search_path=pgtap,public;         
+LOAD 'plpgsql_check';
+ALTER ROLE CURRENT_USER SET plpgsql_check.mode = 'every_start';
+ALTER ROLE CURRENT_USER SET plpgsql_check.fatal_errors = 'yes';
+ALTER ROLE CURRENT_USER SET plpgsql_check.show_nonperformance_warnings = true;
+ALTER ROLE CURRENT_USER SET plpgsql_check.show_performance_warnings = true;
 EOF
