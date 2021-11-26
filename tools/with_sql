@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+# USAGE:
+# with_sql <file> <command>
+# Runs psql with file as input then executes command.
+#
+set -Eeo pipefail
+
+source "$(which docker-entrypoint.sh)"
+
+file="${1:-file argument is required}"
+shift 1
+
+docker_process_sql -f "$file"
+
+("$@")

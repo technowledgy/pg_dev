@@ -43,10 +43,11 @@ RUN apk add \
   ; (cd pgtap \
    ; make \
    ; make install \
-# Running these pgtap tests implicitly tests pg_prove and with_tmp_db, too.
+# Running these pgtap tests implicitly tests pg_prove, with_tmp_db and with_sql, too.
    ; chown -R postgres . \
-   ; su-exec postgres sh -c 'echo "" | with_tmp_db make installcheck' \
-   ; su-exec postgres sh -c 'echo "CREATE EXTENSION pgtap;" | with_tmp_db make test' \
+   ; su-exec postgres with_tmp_db make installcheck \
+   ; echo "CREATE EXTENSION pgtap;" > create_pgtap.sql \
+   ; su-exec postgres with_tmp_db with_sql create_pgtap.sql make test \
     ) \
 ### cleanup
   ; rm -rf -- * \

@@ -1,25 +1,20 @@
 #!/usr/bin/env bash
 #
 # USAGE:
-# test <file>
+# pgtap
 # This will:
-#  - Launch a temporary postgresql database via with_tmp_db.
-#  - Load the file as the entrypoint to create the database schema.
 #  - Create the pgTAP extension in a schema called pgtap.
 #  - Run pg_prove on all .spec.sql files found recursively.
+#
 set -Eeuo pipefail
 
-schema="${1}"
-shift 1
+with_sql /dev/stdin <<EOF \
+  pg_prove -r \
+    --ext .spec.sql \
+    --pgtap-option suffix=.sql \
+    "$@"
 
-cat - "$schema" <<EOF \
-  | with_tmp_db \
-    pg_prove -r \
-      --ext .spec.sql \
-      --pgtap-option suffix=.sql \
-      "$@"
-
-CREATE SCHEMA pgtap;
-CREATE EXTENSION pgtap WITH SCHEMA pgtap;
+CREATE SCHEMA IF NOT EXISTS pgtap;
+CREATE EXTENSION IF NOT EXISTS pgtap WITH SCHEMA pgtap;
 ALTER ROLE CURRENT_USER SET search_path=pgtap,public;
 EOF

@@ -40,7 +40,7 @@ jobs:
           build-args: PG_VERSION=${{ matrix.version }}
           load: true
       - name: Test
-        run: DOCKER_BUILDKIT=1 docker compose run --rm pg_dev pgtap tests/schema.sql
+        run: DOCKER_BUILDKIT=1 docker compose run --rm pg_dev with_tmp_db with_sql tests/schema.sql pgtap
       - name: Push
         uses: docker/build-push-action@v2.7.0
         with:
