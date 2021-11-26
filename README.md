@@ -13,17 +13,16 @@ Currently, the following tools are added:
 - [`pg_prove`](https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP)
 
 As well as some helper scripts:
-- `pgtap`: Opinionated helper to set up pgtap, load the schema and run pgTAP tests. Uses `with_tmp_db` internally.
 - `with_sql`: Wrapper to create schema from .sql file via psql.
 - `with_tmp_db`: Sets up a temporary database to run tests against. Adapted from [PostgREST](https://github.com/PostgREST/postgrest/blob/main/test/with_tmp_db).
 - `with_watcher`: Enable watch mode for tests.
 
 ## How to use
 
-Mount your source code into the container and run `pgtap` with a temporary database in watch mode:
+Mount your source code into the container and run `pg_prove` with a temporary database in watch mode:
 
 ```bash
-docker run --rm -v "$PWD:/usr/src" with_watcher with_tmp_db with_sql schema.sql pgtap
+docker run --rm -v "$PWD:/usr/src" with_watcher with_tmp_db with_sql schema.sql pg_prove -r --ext .spec.sql --pgtap-option suffix=.sql
 ```
 
 This will load the schema defined in `schema.sql` through psql, create the pgTAP extension in a `pgtap` schema and then run pg_prove on all `.spec.sql` files found recursively.
