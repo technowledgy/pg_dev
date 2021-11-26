@@ -8,9 +8,12 @@
 #
 set -Eeo pipefail
 
-source "$(which docker-entrypoint.sh)"
+# restart script as postgres user if run as root
+if [ "$(id -u)" = '0' ]; then
+  exec su-exec postgres "$0" "$@"
+fi
 
-tmpdir="$(mktemp -d)"
+source "$(which docker-entrypoint.sh)"
 
 # finds the max port number of currently active postgresql sockets
 function find_max_port() {
@@ -21,20 +24,24 @@ function find_max_port() {
 }
 maxport="$(find_max_port)"
 
-export PGDATA="$tmpdir/data"
-export PGHOST=""
-export PGPORT="$((${maxport:-5431} + 1))"
+PGDATA="$(mktemp -d)"
+PGHOST=""
+PGPORT="$((${maxport:-5431} + 1))"
+export PGDATA PGHOST PGPORT
 
 # hook into docker_ scripts
 # shellcheck disable=SC2034
 POSTGRES_INITDB_ARGS="--no-locale --nosync --auth=trust"
-# shellcheck disable=SC2034
-POSTGRES_USER=postgres
-docker_init_database_dir > "$tmpdir/initdb.log"
-docker_temp_server_start > "$tmpdir/start.log"
+
+docker_setup_env
+docker_init_database_dir > /dev/null
+docker_temp_server_start > /dev/null
+
+docker_setup_db
+docker_process_init_files /docker-entrypoint-initdb.d/*
 
 function cleanup() {
-  docker_temp_server_stop > "$tmpdir/stop.log"
+  docker_temp_server_stop > /dev/null
   rm -rf "$PGDATA"
 }
 trap cleanup EXIT
