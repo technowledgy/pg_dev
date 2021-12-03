@@ -7,5 +7,7 @@
 set -Eeuo pipefail
 
 while true; do
-  (! ag -l . | entr -dr "$@")
+  # Allow re-splitting of arguments on purpose
+  # shellcheck disable=SC2068
+  (! ag -l . | entr -dr $@)
 done
