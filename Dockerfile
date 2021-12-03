@@ -52,5 +52,3 @@ RUN apk add \
 ### cleanup
   ; rm -rf -- * \
   ; apk del --no-cache build-deps
-
-USER postgres
