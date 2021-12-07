@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 #
 # USAGE:
-# echo "<sql>" | with_tmp_db <command>
-# The SQL code is used for database initialization.
-# The command is executed with postgres available. PGHOST and PGPORT are set accordingly.
+# with_tmp_db <command>
+# The command is executed with PostgreSQL available. PGHOST and PGPORT are set accordingly.
 # The database is shutdown and the cluster removed when the script exits.
 #
 set -Eeo pipefail
