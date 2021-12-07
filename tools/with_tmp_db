@@ -40,7 +40,7 @@ docker_init_database_dir > /dev/null
 docker_temp_server_start > /dev/null
 
 docker_setup_db
-docker_process_init_files /docker-entrypoint-initdb.d/*
+docker_process_init_files /docker-entrypoint-initdb.d/* > /dev/null
 
 function cleanup() {
   docker_temp_server_stop > /dev/null
