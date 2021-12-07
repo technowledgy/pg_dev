@@ -5,8 +5,6 @@ ignored:
   # repository pinning is better than package pinning for apk
   # https://stschindler.medium.com/the-problem-with-docker-and-alpines-package-pinning-18346593e891
   - DL3018
-  # Disabled on alpine
-  - DL4006
   # shellcheck doesn't recognize the SHELL sh -eux command
   - SC2164
 label-schema:
