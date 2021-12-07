@@ -14,7 +14,7 @@ Currently, the following tools are added:
 
 As well as some helper scripts:
 - `with_sql`: Wrapper to create schema from .sql file via psql.
-- `with_tmp_db`: Sets up a temporary database to run tests against. Adapted from [PostgREST](https://github.com/PostgREST/postgrest/blob/main/test/with_tmp_db).
+- `with_tmp_db`: Sets up a temporary database to run tests against. Inspired by [PostgREST](https://github.com/PostgREST/postgrest/blob/main/test/with_tmp_db).
 - `with_watcher`: Enable watch mode for tests.
 
 ## How to use
