@@ -23,16 +23,19 @@ function find_max_port() {
 }
 maxport="$(find_max_port)"
 
+docker_setup_env
+
 PGDATA="$(mktemp -d)"
 PGHOST=""
 PGPORT="$((${maxport:-5431} + 1))"
-export PGDATA PGHOST PGPORT
+PGDATABASE=$POSTGRES_DB
+PGUSER=$POSTGRES_USER
+export PGDATA PGHOST PGPORT PGDATABASE PGUSER
 
 # hook into docker_ scripts
 # shellcheck disable=SC2034
 POSTGRES_INITDB_ARGS="--no-locale --nosync --auth=trust"
 
-docker_setup_env
 docker_init_database_dir > /dev/null
 docker_temp_server_start > /dev/null
 
