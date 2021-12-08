@@ -38,9 +38,13 @@ jobs:
         uses: docker/build-push-action@v2.7.0
         with:
           build-args: PG_VERSION=${{ matrix.pg }}
-          load: true
+      - name: Build Test
+        uses: docker/build-push-action@v2.7.0
+        with:
+          build-args: PG_VERSION=${{ matrix.pg }}
+          target: test
       - name: Test
-        run: DOCKER_BUILDKIT=1 docker compose run --rm pg_dev with_tmp_db with_sql test/schema.sql pg_prove test/schema.spec.sql
+        run: DOCKER_BUILDKIT=1 docker compose run --rm bats test
       - name: Push
         uses: docker/build-push-action@v2.7.0
         with:

@@ -1,6 +1,6 @@
 ARG PG_VERSION=14.1
 
-FROM postgres:${PG_VERSION}-alpine
+FROM postgres:${PG_VERSION}-alpine AS base
 
 LABEL author Wolfgang Walther
 LABEL maintainer pg-dev@technowledgy.de
@@ -45,10 +45,26 @@ RUN apk add \
    ; make \
    ; make install \
 # Running these pgtap tests implicitly tests pg_prove and with_tmp_db, too.
-   ; chown -R postgres . \
    ; with_tmp_db make installcheck \
    ; with_tmp_db make test \
     ) \
 ### cleanup
   ; rm -rf -- * \
   ; apk del --no-cache build-deps
+
+FROM base AS test
+
+RUN apk add \
+        --no-cache \
+        --virtual build-deps \
+        git \
+### bats
+  ; git clone --depth 1 --branch master https://github.com/bats-core/bats-core \
+  ; (cd bats-core \
+   ; ./install.sh / \
+    ) \
+### cleanup
+  ; rm -rf -- * \
+  ; apk del --no-cache build-deps
+
+FROM base
