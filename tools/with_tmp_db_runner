@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -Eeo pipefail
+
+# restart script as postgres user if run as root
+if [ "$(id -u)" = '0' ]; then
+  exec su-exec postgres "$0" "$@"
+fi
+
+source "$(which docker-entrypoint.sh)"
+
+case $1 in
+  start)
+    PGDATA="$(mktemp -d)"
+    export PGDATA
+
+    function cleanup() {
+      "$0" stop "$PGDATA"
+    }
+    trap cleanup ERR
+
+    # hook into docker_ scripts
+    # shellcheck disable=SC2034
+    POSTGRES_INITDB_ARGS="--no-locale --nosync --auth=trust"
+
+    docker_init_database_dir > /dev/null
+    docker_temp_server_start > /dev/null
+
+    docker_setup_db > /dev/null
+    docker_process_init_files /docker-entrypoint-initdb.d/* > /dev/null
+
+    echo "$PGDATA"
+    ;;
+
+  stop)
+    PGDATA="$2"
+    export PGDATA
+
+    docker_temp_server_stop > /dev/null
+    rm -rf "$PGDATA"
+    ;;
+
+  *)
+    exit 1
+    ;;
+esac
