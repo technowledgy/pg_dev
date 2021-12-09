@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # USAGE:
-# with_tmp_db <command>
+# with_pg <command>
 # The command is executed with PostgreSQL available. PGHOST and PGPORT are set accordingly.
 # The database is shutdown and the cluster removed when the script exits.
 #
@@ -26,10 +26,10 @@ PGDATABASE=$POSTGRES_DB
 PGUSER=$POSTGRES_USER
 export PGHOST PGPORT PGDATABASE PGUSER
 
-PGDATA=$(with_tmp_db_runner start)
+PGDATA=$(_with_pg_runner start)
 
 function cleanup() {
-  with_tmp_db_runner stop "$PGDATA"
+  _with_pg_runner stop "$PGDATA"
 }
 trap cleanup EXIT
 

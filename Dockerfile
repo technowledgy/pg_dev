@@ -44,9 +44,9 @@ RUN apk add \
   ; (cd pgtap \
    ; make \
    ; make install \
-# Running these pgtap tests implicitly tests pg_prove and with_tmp_db, too.
-   ; with_tmp_db make installcheck \
-   ; with_tmp_db make test \
+# Running these pgtap tests implicitly tests pg_prove and with_pg, too.
+   ; with_pg make installcheck \
+   ; with_pg make test \
     ) \
 ### cleanup
   ; rm -rf -- * \
