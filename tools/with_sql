@@ -13,6 +13,4 @@ shift 1
 
 docker_process_sql -f "$file"
 
-# Allow re-splitting of arguments on purpose
-# shellcheck disable=SC2068
-($@)
+("$@")

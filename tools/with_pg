@@ -33,6 +33,4 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-# Allow re-splitting of arguments on purpose
-# shellcheck disable=SC2068
-($@)
+("$@")
