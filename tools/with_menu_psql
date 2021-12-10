@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+# USAGE:
+# with_menu_psql <command>
+# Registers psql in the menu and otherwise just runs the command.
+#
+set -Eeuo pipefail
+
+source "$(dirname "$0")/_with_tmp_dir"
+
+envfile="$PG_DEV_TMP_DIR/with_psql.env"
+export > "$envfile"
+
+"$(dirname "$0")/_with_menu_item" p "launch psql in the current environment" "$(dirname "$0")/_with_env" "$envfile" psql
+
+("$@")

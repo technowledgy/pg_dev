@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -Eeo pipefail
+
+envfile="${1:?envfile not set}"
+shift 1
+
+source "$envfile"
+
+("$@")
