@@ -7,11 +7,8 @@ PG_DEV_MENU="$PG_DEV_TMP_DIR/menu"
 export PG_DEV_MENU
 touch "$PG_DEV_MENU"
 
-echo '>&2 tput cnorm' >> "$PG_DEV_TMP_DIR/cleanup"
-
-# clear and reset cursor on stderr
+# clear on stderr
 function c() {
-  >&2 tput cnorm
   >&2 clear
 }
 
@@ -37,9 +34,6 @@ RC=$"\e[4A\e[${N}A" # Reset cursor to beginning of menu
 
 REPLY=
 until [ "$REPLY" = "q" ]; do
-  # hide cursor
-  >&2 tput civis
-
   # show usage menu and reset cursor position
   # new output will clear the menu
   e "\n${CL}${GR}Command Usage${NC}"
