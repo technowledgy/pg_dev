@@ -6,7 +6,7 @@
 }
 
 @test "with_pg runs command with current user (other)" {
-  adduser -S test
+  adduser -S test || true
   run -0 su-exec test with_pg whoami
   [ "$output" = "test" ]
 }
