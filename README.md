@@ -13,6 +13,7 @@ Currently, the following tools are added:
 - [`pg_prove`](https://metacpan.org/pod/TAP::Parser::SourceHandler::pgTAP)
 
 As well as some helper scripts:
+- `with_menu`: Provides a menu to choose options from other `with_` helpers from, to be used together with `with_watcher`.
 - `with_pg`: Sets up a temporary database to run tests against. Inspired by [PostgREST](https://github.com/PostgREST/postgrest/blob/main/test/with_tmp_db).
 - `with_sql`: Wrapper to create schema from .sql file via psql.
 - `with_watcher`: Enable watch mode for tests.

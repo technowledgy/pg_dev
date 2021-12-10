@@ -28,8 +28,8 @@ PGDATABASE=$POSTGRES_DB
 PGUSER=$POSTGRES_USER
 export PGHOST PGPORT PGDATABASE PGUSER
 
-PGDATA=$(_with_pg_runner start)
+PGDATA=$("$(dirname "$0")/_with_pg_runner" start)
 
-echo _with_pg_runner stop "$PGDATA" >> "$PG_DEV_TMP_DIR/cleanup"
+echo "$(dirname "$0")/_with_pg_runner" stop "$PGDATA" >> "$PG_DEV_TMP_DIR/cleanup"
 
 ("$@")

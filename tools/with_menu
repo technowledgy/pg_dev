@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+source "$(dirname "$0")/_with_tmp_dir"
+
+PG_DEV_MENU="$PG_DEV_TMP_DIR/menu"
+export PG_DEV_MENU
+touch "$PG_DEV_MENU"
+
+echo '>&2 tput cnorm' >> "$PG_DEV_TMP_DIR/cleanup"
+
+# clear and reset cursor on stderr
+function c() {
+  >&2 tput cnorm
+  >&2 clear
+}
+
+# echo on stderr
+function e() {
+  >&2 echo -e "$@"
+}
+
+logfile="$PG_DEV_TMP_DIR/with_menu.log"
+
+c
+("$@" | tee "$logfile")
+
+"$(dirname "$0")/_with_menu_item" 0 "show output for final command" cat "$logfile"
+
+# set up escape sequences
+GR=$'\e[0;37m' # Gray
+WH=$'\e[1;97m' # White
+NC=$'\e[0m' # No Color
+CL=$'\e[K' # Clear line
+N="$(wc -l < "$PG_DEV_MENU")" # Number of items
+RC=$"\e[4A\e[${N}A" # Reset cursor to beginning of menu
+
+REPLY=
+until [ "$REPLY" = "q" ]; do
+  # hide cursor
+  >&2 tput civis
+
+  # show usage menu and reset cursor position
+  # new output will clear the menu
+  e "\n${CL}${GR}Command Usage${NC}"
+  e "${CL}${GR} › Press ${WH}ENTER${GR} to re-run command.${NC}"
+  while IFS=$'\t' read -r key desc cmd; do
+    e "${CL}${GR} › Press ${WH}${key}${GR} to ${desc}.${NC}"
+  done < "$PG_DEV_MENU"
+  e "${CL}${GR} › Press ${WH}q${GR} to quit.${NC}"
+  e -n "${RC}${CL}"
+
+  # read key and launch command
+  read -rsn1
+  case "$REPLY" in
+    q)
+      exit 0
+      ;;
+
+    "")
+      c
+      ("$@" | tee "$logfile")
+      ;;
+
+    *)
+      while IFS=$'\t' read -r key desc cmd; do
+        if [ "$key" = "$REPLY" ]; then
+          c
+          e "${GR}$desc:${NC}"
+          e
+          ($cmd)
+        fi
+      done < "$PG_DEV_MENU"
+      ;;
+  esac
+done
