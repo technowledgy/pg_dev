@@ -15,6 +15,7 @@ source "$(which docker-entrypoint.sh)"
 
 PG_DEV_WITH_SQL_COUNTER=${PG_DEV_WITH_SQL_COUNTER:-0}
 PG_DEV_WITH_SQL_COUNTER=$((PG_DEV_WITH_SQL_COUNTER+1))
+export PG_DEV_WITH_SQL_COUNTER
 
 logfile="$PG_DEV_TMP_DIR/with_sql_$PG_DEV_WITH_SQL_COUNTER.log"
 
