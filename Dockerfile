@@ -58,6 +58,7 @@ RUN apk add \
         --no-cache \
         --virtual build-deps \
         git \
+        ncurses \
 ### bats
   ; git clone --depth 1 --branch master https://github.com/bats-core/bats-core \
   ; (cd bats-core \
