@@ -109,7 +109,7 @@ assign_positional_args 1 "${_positionals[@]}"
 set -Eeuo pipefail
 
 while true; do
-  (ag -l '' "${_arg_watch[@]}" | entr -dr "${_arg_leftovers[@]}")
+  (ag -l '' "${_arg_watch[@]}" | entr -cdr "${_arg_leftovers[@]}")
   if [ ! "$?" -eq 2 ]; then
     exit
   fi
