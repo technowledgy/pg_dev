@@ -52,6 +52,7 @@ until [ "$REPLY" = "q" ]; do
       ;;
 
     "")
+      bash "$PG_DEV_TMP_DIR/cleanup"
       c
       ("$@" | tee "$logfile")
       ;;
