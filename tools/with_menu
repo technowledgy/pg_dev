@@ -20,7 +20,7 @@ function e() {
 logfile="$PG_DEV_TMP_DIR/with_menu.log"
 
 c
-("$@" | tee "$logfile")
+("$@" | tee "$logfile") || true
 
 "$(dirname "$0")/_with_menu_item" 0 "show output for final command" cat "$logfile"
 
@@ -54,7 +54,7 @@ until [ "$REPLY" = "q" ]; do
     "")
       bash "$PG_DEV_TMP_DIR/cleanup"
       c
-      ("$@" | tee "$logfile")
+      ("$@" | tee "$logfile") || true
       ;;
 
     *)

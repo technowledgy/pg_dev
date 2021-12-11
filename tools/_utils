@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+function catch_log() {
+  set +e
+  logfile="$1"
+  shift 1
+  "$@" >> "$logfile" 2>&1
+  ret="$?"
+  if [ ! "$ret" -eq 0 ]; then
+    echo Error in "$0":
+    echo
+    cat "$logfile"
+    exit "$ret"
+  fi
+}

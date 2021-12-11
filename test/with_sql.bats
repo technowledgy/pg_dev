@@ -15,3 +15,15 @@ export TERM=vt100
   assert_line --regexp 'show output for with_sql test/schema.sql'
   assert_line --regexp 'show output for with_sql test/schema.spec.sql'
 }
+
+@test "with_sql provides useful output when error is thrown" {
+  run -3 \
+    tools/with_pg \
+    tools/with_sql test/error.sql \
+    echo never reached
+  assert_output 'Error in tools/with_sql:
+
+psql:test/error.sql:1: ERROR:  syntax error at or near "CRETE"
+LINE 1: CRETE TABLA error;
+        ^'
+}

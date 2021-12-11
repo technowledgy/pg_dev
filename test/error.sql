@@ -1,0 +1,1 @@
+CRETE TABLA error;

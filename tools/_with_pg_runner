@@ -11,6 +11,7 @@ if [ "$(id -u)" = '0' ]; then
   exec su-exec postgres "$0" "$@"
 fi
 
+source "$(dirname "$0")/_utils"
 source "$(which docker-entrypoint.sh)"
 
 case $1 in
@@ -27,16 +28,15 @@ case $1 in
     # shellcheck disable=SC2034
     POSTGRES_INITDB_ARGS="--no-locale --nosync --auth=trust"
 
-    docker_init_database_dir > "$logpath/initdb.log" 2>&1
     "$(dirname "$0")/_with_menu_item" i "show output for PG initdb" cat "$logpath/initdb.log"
+    catch_log "$logpath/initdb.log" docker_init_database_dir
 
-    # TODO: output actual server log, too.
-    docker_temp_server_start > "$logpath/startup.log" 2>&1
     "$(dirname "$0")/_with_menu_item" s "show output for PG startup" cat "$logpath/startup.log"
+    catch_log "$logpath/startup.log" docker_temp_server_start
 
-    docker_setup_db > "$logpath/entrypoint.log" 2>&1
-    docker_process_init_files /docker-entrypoint-initdb.d/* >> "$logpath/entrypoint.log" 2>&1
     "$(dirname "$0")/_with_menu_item" e "show output for PG docker-entrypoint-initdb.d" cat "$logpath/entrypoint.log"
+    catch_log "$logpath/entrypoint.log" docker_setup_db
+    catch_log "$logpath/entrypoint.log" docker_process_init_files /docker-entrypoint-initdb.d/*
 
     echo "$PGDATA"
     ;;
@@ -45,8 +45,8 @@ case $1 in
     PGDATA="$2"
     export PGDATA
 
-    docker_temp_server_stop > "$logpath/shutdown.log" 2>&1
     "$(dirname "$0")/_with_menu_item" s "show output for PG shutdown" cat "$logpath/shutdown.log"
+    catch_log "$logpath/shutdown.log" docker_temp_server_stop
     rm -rf "$PGDATA"
     ;;
 
