@@ -45,7 +45,7 @@ until [ "$REPLY" = "q" ]; do
   e -n "${RC}${CL}"
 
   # read key and launch command
-  read -rsn1
+  read -rsn1 -t1
   case "$REPLY" in
     q)
       exit 0

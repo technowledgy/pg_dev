@@ -11,5 +11,5 @@ if [ -z "$PG_DEV_TMP_DIR" ]; then
   PG_DEV_TMP_DIR="$(mktemp -d)"
   export PG_DEV_TMP_DIR
   echo '#!/usr/bin/env bash' > "$PG_DEV_TMP_DIR/cleanup"
-  trap cleanup EXIT
+  trap cleanup EXIT TERM
 fi
