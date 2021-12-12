@@ -4,10 +4,10 @@ function catch_log() {
   set +e
   logfile="$1"
   shift 1
-  "$@" >> "$logfile" 2>&1
+  "$@" > "$logfile" 2>&1
   ret="$?"
   if [ ! "$ret" -eq 0 ]; then
-    echo Error in "$0":
+    echo Error in "$0". Contents of "$logfile":
     echo
     cat "$logfile"
     exit "$ret"

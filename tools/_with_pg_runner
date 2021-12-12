@@ -34,8 +34,10 @@ case $1 in
     "$(dirname "$0")/_with_menu_item" s "show output for PG startup" cat "$logpath/startup.log"
     catch_log "$logpath/startup.log" docker_temp_server_start
 
+    "$(dirname "$0")/_with_menu_item" d "show output for PG setup_db" cat "$logpath/setup.log"
+    catch_log "$logpath/setup.log" docker_setup_db
+
     "$(dirname "$0")/_with_menu_item" e "show output for PG docker-entrypoint-initdb.d" cat "$logpath/entrypoint.log"
-    catch_log "$logpath/entrypoint.log" docker_setup_db
     catch_log "$logpath/entrypoint.log" docker_process_init_files /docker-entrypoint-initdb.d/*
 
     echo "$PGDATA"
@@ -45,9 +47,8 @@ case $1 in
     PGDATA="$2"
     export PGDATA
 
-    "$(dirname "$0")/_with_menu_item" s "show output for PG shutdown" cat "$logpath/shutdown.log"
-    catch_log "$logpath/shutdown.log" docker_temp_server_stop
-    rm -rf "$PGDATA"
+    docker_temp_server_stop > /dev/null 2>&1
+    rm -rf "$PGDATA" > /dev/null 2>&1
     ;;
 
   *)

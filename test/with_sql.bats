@@ -21,7 +21,8 @@ export TERM=vt100
     tools/with_pg \
     tools/with_sql test/error.sql \
     echo never reached
-  assert_output 'Error in tools/with_sql:
+  assert_output --partial 'Error in tools/with_sql. Contents of'
+  assert_output --partial ':
 
 psql:test/error.sql:1: ERROR:  syntax error at or near "CRETE"
 LINE 1: CRETE TABLA error;

@@ -3,8 +3,8 @@ set -Eeo pipefail
 set +u
 
 function cleanup() {
-  echo "rm -rf '$PG_DEV_TMP_DIR'" >> "$PG_DEV_TMP_DIR/cleanup"
-  bash "$PG_DEV_TMP_DIR/cleanup"
+  bash "$PG_DEV_TMP_DIR/cleanup" > /dev/null 2>&1
+  rm -rf "$PG_DEV_TMP_DIR" > /dev/null 2>&1
 }
 
 if [ -z "$PG_DEV_TMP_DIR" ]; then
