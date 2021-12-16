@@ -18,16 +18,17 @@ RUN apk add \
 # to silence initdb "locale not found" warnings
         musl-locales \
         perl \
+        perl-xml-simple \
         the_silver_searcher \
 ### build deps
   ; apk add \
         --no-cache \
         --virtual build-deps \
+        build-base \
         git \
-        make \
-        patch \
-        perl \
+        perl-dev \
         perl-module-build \
+        perl-test-deep \
         perl-test-pod \
         perl-test-pod-coverage \
         su-exec \
@@ -47,6 +48,14 @@ RUN apk add \
 # Running these pgtap tests implicitly tests pg_prove and with_pg, too.
    ; with_pg make installcheck \
    ; with_pg make test \
+    ) \
+### tap-harness-junit
+  ; git clone --depth 1 --branch master https://github.com/jlavallee/tap-harness-junit \
+  ; (cd tap-harness-junit \
+   ; perl Build.PL \
+   ; ./Build \
+   ; ./Build test \
+   ; ./Build install \
     ) \
 ### cleanup
   ; rm -rf -- * \
