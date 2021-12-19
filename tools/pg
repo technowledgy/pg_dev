@@ -7,8 +7,6 @@
 #
 set -Eeo pipefail
 
-source "$(dirname "$0")/_with_tmp_dir"
-
 source "$(which docker-entrypoint.sh)"
 
 # finds the max port number of currently active postgresql sockets
@@ -24,12 +22,14 @@ docker_setup_env
 
 PGHOST=""
 PGPORT="$((${maxport:-5431} + 1))"
-PGDATABASE=$POSTGRES_DB
-PGUSER=$POSTGRES_USER
+PGDATABASE="$POSTGRES_DB"
+PGUSER="$POSTGRES_USER"
 export PGHOST PGPORT PGDATABASE PGUSER
 
-PGDATA=$("$(dirname "$0")/_with_pg_runner" start)
+PGDATA="$(mktemp -d)"
+export PGDATA
+trap '$(dirname "$0")/pg_runner stop' EXIT
 
-echo "$(dirname "$0")/_with_pg_runner" stop "$PGDATA" >> "$PG_DEV_TMP_DIR/cleanup"
+"$(dirname "$0")/pg_runner" start
 
 ("$@")

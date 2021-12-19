@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+script_path="$(readlink -f "${BASH_SOURCE[0]}")"
+# shellcheck source=tools/watcher.args.bash
+source "$script_path.args.bash"
+
+while true; do
+  (ag -l '' "${_arg_watch[@]}" | entr -dr "${_arg_leftovers[@]}")
+  if [ ! "$?" -eq "2" ]; then
+    exit
+  fi
+done

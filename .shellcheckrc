@@ -1,3 +1,2 @@
 # disable dynamic source warning for docker-entrypoint.sh file
 disable=SC1090
-disable=SC1091

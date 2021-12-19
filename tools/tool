@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -Eeo pipefail
+
+# Phase 1: The script is started the first time and
+# no tmux session has been created, yet.
+if ! tmux has-session; then
+  export PG_DEV_WINDOW=0
+  # restarts this script with tmux session created
+  tmux new -d -n tool "$@" \
+    \; set -g mouse on \
+    \; set -g status off
+fi
+
+if [ -t 0 ]; then
+  tmux attach
+else
+  tmux_pid="$(tmux display-message -pF '#{pid}')"
+
+  tail -qf /var/log/stdout &
+  tail_pid=$!
+
+  # wait for tmux to die
+  while [ -e "/proc/$tmux_pid" ]; do sleep 0.1; done
+
+  kill $tail_pid
+fi

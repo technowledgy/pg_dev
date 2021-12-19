@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Provides "static" window ids, that can be re-created with -k
+PG_DEV_WINDOW=$((PG_DEV_WINDOW + 1))
+
+base="$(basename "$0")"
+cmd="$(echo "$@" | sed -E 's/ [^ ]*with .+//g')"
+
+readarray -t pg_env < <(env | grep '^PG' | sed -E 's/^(.+)/-e\n\1/g')
+
+tmux new-window -k -t "$PG_DEV_WINDOW" \
+                "${pg_env[@]}" \
+                -n "$base $cmd" \
+                "$(dirname "$0")/with_wrapper" "$@" \
+     \; \
+     wait "$PG_DEV_WINDOW"

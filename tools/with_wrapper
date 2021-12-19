@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+script_path="$(readlink -f "${BASH_SOURCE[0]}")"
+# shellcheck source=tools/with_wrapper.args.bash
+source "$script_path.args.bash"
+
+# Fix dead pane scroll issue
+echo
+
+if [ "$_arg_quiet" = "off" ]; then
+  tmux pipe-pane 'cat >> /var/log/stdout'
+fi
+
+trap 'tmux wait -S $PG_DEV_WINDOW' EXIT
+
+("$@")

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -Eeo pipefail
+
+tmux bind-key -n Escape "display-popup -C; run-shell $0" \
+  \; set-hook -g after-new-window "display-popup -C; run-shell -d 1 $0" \
+  \; set -g remain-on-exit on
+
+("$@")
+
+show_key=0
+(
+  tmux list-windows -F '#I #W' | while read -r idx cmd; do
+    case "$cmd" in
+      tool)
+        ;;
+      "with menu")
+        ;;
+
+      "with watcher"*)
+        echo "'Run again'" "r" "'send-keys -t $idx -H 20'"
+        ;;
+
+      *)
+        echo "'Show \"$cmd\"'" $((++show_key)) "'select-window -t $idx; run-shell $0'"
+        ;;
+    esac
+  done
+  echo "Exit" "q" "kill-session"
+) | xargs tmux menu -x 1000 -y 1000

@@ -9,17 +9,22 @@ LABEL license MIT
 WORKDIR /usr/src
 SHELL ["/bin/sh", "-eux", "-c"]
 
-COPY tools /bin
+COPY tools /usr/local/bin
 COPY initdb /docker-entrypoint-initdb.d
 
-RUN apk add \
+### set up multi-process logging
+RUN mkfifo /var/log/stdout \
+### install deps
+  ; apk add \
         --no-cache \
+        coreutils \
         entr \
 # to silence initdb "locale not found" warnings
         musl-locales \
         perl \
         perl-xml-simple \
         the_silver_searcher \
+        tmux \
 ### build deps
   ; apk add \
         --no-cache \
@@ -45,9 +50,9 @@ RUN apk add \
   ; (cd pgtap \
    ; make \
    ; make install \
-# Running these pgtap tests implicitly tests pg_prove and with_pg, too.
-   ; with_pg make installcheck \
-   ; with_pg make test \
+# Running these pgtap tests implicitly tests pg_prove and with pg, too.
+#   ; tool with pg with make installcheck \
+#   ; tool with pg with make test \
     ) \
 ### tap-harness-junit
   ; git clone --depth 1 --branch master https://github.com/jlavallee/tap-harness-junit \
