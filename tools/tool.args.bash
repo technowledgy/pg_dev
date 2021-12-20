@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# ARG_OPTIONAL_BOOLEAN([quiet],[q])
+# ARG_OPTIONAL_BOOLEAN([ci],[],[Enable CI mode. Do not use tmux, but report exit code.])
 # ARG_LEFTOVERS([command])
 # ARG_DEFAULTS_POS([])
 # ARGBASH_GO()
@@ -21,7 +21,7 @@ die()
 
 begins_with_short_option()
 {
-	local first_option all_short_options='q'
+	local first_option all_short_options=''
 	first_option="${1:0:1}"
 	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -30,13 +30,14 @@ begins_with_short_option()
 _positionals=()
 _arg_leftovers=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
-_arg_quiet="off"
+_arg_ci="off"
 
 
 print_help()
 {
-	printf 'Usage: %s [-q|--(no-)quiet] ... \n' "$0"
+	printf 'Usage: %s [--(no-)ci] ... \n' "$0"
 	printf '\t%s\n' "... : command"
+	printf '\t%s\n' "--ci, --no-ci: Enable CI mode. Do not use tmux, but report exit code. (off by default)"
 }
 
 
@@ -47,17 +48,9 @@ parse_commandline()
 	do
 		_key="$1"
 		case "$_key" in
-			-q|--no-quiet|--quiet)
-				_arg_quiet="on"
-				test "${1:0:5}" = "--no-" && _arg_quiet="off"
-				;;
-			-q*)
-				_arg_quiet="on"
-				_next="${_key##-q}"
-				if test -n "$_next" -a "$_next" != "$_key"
-				then
-					{ begins_with_short_option "$_next" && shift && set -- "-q" "-${_next}" "$@"; } || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
-				fi
+			--no-ci|--ci)
+				_arg_ci="on"
+				test "${1:0:5}" = "--no-" && _arg_ci="off"
 				;;
 			*)
 				_last_positional="$1"

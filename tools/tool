@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
-set -Eeo pipefail
+set -Eeuo pipefail
 
-# Phase 1: The script is started the first time and
-# no tmux session has been created, yet.
+script_path="$(readlink -f "${BASH_SOURCE[0]}")"
+# shellcheck source=tools/tool.args.bash
+source "$script_path.args.bash"
+
+if [ "$_arg_ci" = "on" ]; then
+  exec "${_arg_leftovers[@]}"
+fi
+
 if ! tmux has-session; then
   export PG_DEV_WINDOW=0
-  # restarts this script with tmux session created
-  tmux new -d -n tool "$@" \
+  tmux new -d -n tool "${_arg_leftovers[@]}" \
     \; set -g mouse on \
     \; set -g status off
 fi

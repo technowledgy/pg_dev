@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+if ! tmux has-session; then
+  exec "$@"
+fi
+
 # Provides "static" window ids, that can be re-created with -k
 PG_DEV_WINDOW=$((PG_DEV_WINDOW + 1))
 

@@ -51,8 +51,8 @@ RUN mkfifo /var/log/stdout \
    ; make \
    ; make install \
 # Running these pgtap tests implicitly tests pg_prove and with pg, too.
-#   ; tool with pg with make installcheck \
-#   ; tool with pg with make test \
+   ; with pg with make installcheck \
+   ; with pg with make test \
     ) \
 ### tap-harness-junit
   ; git clone --depth 1 --branch master https://github.com/jlavallee/tap-harness-junit \
