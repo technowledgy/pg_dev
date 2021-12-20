@@ -11,18 +11,18 @@ source "$(which docker-entrypoint.sh)"
 
 case $1 in
   start)
-    # hook into docker_ scripts
-    # shellcheck disable=SC2034
-    POSTGRES_INITDB_ARGS="--no-locale --nosync --auth=trust"
+    initdb --no-locale --nosync --auth=trust --username="$PGUSER"
+    pg_ctl -D "$PGDATA" -o "-p $PGPORT" -w start
+    
+    if [ "$PGDATABASE" != "postgres" ]; then
+      createdb "$PGDATABASE"
+    fi
 
-    docker_init_database_dir
-    docker_temp_server_start
-    docker_setup_db
     docker_process_init_files /docker-entrypoint-initdb.d/*
     ;;
 
   stop)
-    docker_temp_server_stop
+    pg_ctl -D "$PGDATA" -m immediate -w stop
     rm -rf "$PGDATA"
     ;;
 

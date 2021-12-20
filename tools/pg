@@ -20,14 +20,13 @@ maxport="$(find_max_port)"
 
 docker_setup_env
 
+PGDATA="$(mktemp -d)"
+PGDATABASE="$POSTGRES_DB"
 PGHOST=""
 PGPORT="$((${maxport:-5431} + 1))"
-PGDATABASE="$POSTGRES_DB"
 PGUSER="$POSTGRES_USER"
-export PGHOST PGPORT PGDATABASE PGUSER
+export PGDATA PGDATABASE PGHOST PGPORT PGUSER
 
-PGDATA="$(mktemp -d)"
-export PGDATA
 trap '$(dirname "$0")/pg_runner stop' EXIT
 
 "$(dirname "$0")/pg_runner" start
