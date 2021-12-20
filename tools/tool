@@ -1,31 +1,25 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-script_path="$(readlink -f "${BASH_SOURCE[0]}")"
-# shellcheck source=tools/tool.args.bash
-source "$script_path.args.bash"
-
-if [ "$_arg_ci" = "on" ]; then
-  exec "${_arg_leftovers[@]}"
+if [[ -v PG_DEV_CI ]]; then
+  exec "$@"
 fi
 
-if ! tmux has-session; then
+if [[ ! -v TMUX ]]; then
   export PG_DEV_WINDOW=0
-  tmux new -d -n tool "${_arg_leftovers[@]}" \
+  tmux new -d -n tool "$@" \
     \; set -g mouse on \
     \; set -g status off
 fi
 
 if [ -t 0 ]; then
-  tmux attach
-else
-  tmux_pid="$(tmux display-message -pF '#{pid}')"
-
-  tail -qf /var/log/stdout &
-  tail_pid=$!
-
-  # wait for tmux to die
-  while [ -e "/proc/$tmux_pid" ]; do sleep 0.1; done
-
-  kill $tail_pid
+  exec tmux attach
 fi
+
+tmux_pid="$(tmux display-message -pF '#{pid}')"
+
+cat /var/log/stdout &
+trap 'kill 0' EXIT
+
+# wait for tmux to die
+while [ -e "/proc/$tmux_pid" ]; do sleep 0.1; done

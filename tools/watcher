@@ -5,8 +5,12 @@ script_path="$(readlink -f "${BASH_SOURCE[0]}")"
 # shellcheck source=tools/watcher.args.bash
 source "$script_path.args.bash"
 
+if [[ -v PG_DEV_CI ]]; then
+  exec "${_arg_leftovers[@]}"
+fi
+
 while true; do
-  (ag -l '' "${_arg_watch[@]}" | entr -dr "${_arg_leftovers[@]}")
+  (ag -l --vimgrep '' "${_arg_watch[@]}" | entr -dr "${_arg_leftovers[@]}")
   if [ ! "$?" -eq "2" ]; then
     exit
   fi

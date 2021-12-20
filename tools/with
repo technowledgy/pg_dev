@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-if ! tmux has-session; then
+if [[ ! -v TMUX ]]; then
   exec "$@"
 fi
 
