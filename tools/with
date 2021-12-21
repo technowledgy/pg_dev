@@ -8,14 +8,19 @@ fi
 # Provides "static" window ids, that can be re-created with -k
 PG_DEV_WINDOW=$((PG_DEV_WINDOW + 1))
 
-base="$(basename "$0")"
+detached=()
+if [ "${PG_DEV_ACTIVE_WINDOW:-$PG_DEV_WINDOW}" -lt "$PG_DEV_WINDOW" ]; then
+  detached[0]="-d"
+fi
+
 cmd="$(echo "$@" | sed -E 's/ [^ ]*with .+//g')"
 
 readarray -t pg_env < <(env | grep '^PG' | sed -E 's/^(.+)/-e\n\1/g')
 
 tmux new-window -k -t "$PG_DEV_WINDOW" \
+                "${detached[@]}" \
                 "${pg_env[@]}" \
-                -n "$base $cmd" \
+                -n "$cmd" \
                 "$(dirname "$0")/with_wrapper" "$@" \
      \; \
      wait "$PG_DEV_WINDOW"

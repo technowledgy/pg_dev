@@ -24,17 +24,15 @@ show_key=0
 (
   tmux list-windows -F '#I #W' | while read -r idx cmd; do
     case "$cmd" in
-      tool)
-        ;;
-      "with menu")
+      tool|menu)
         ;;
 
-      "with watcher"*)
+      watcher*)
         echo "'Run again'" "r" "'send-keys -t $idx -H 20'"
         ;;
 
       *)
-        echo "'Show \"$cmd\"'" $((++show_key)) "'select-window -t $idx; run-shell $0'"
+        echo "'Show \"$cmd\"'" $((++show_key)) "'setenv PG_DEV_ACTIVE_WINDOW $idx; select-window -t $idx; run-shell $0'"
         ;;
     esac
   done
