@@ -14,6 +14,7 @@ Currently, the following tools are added:
 
 As well as some helper scripts:
 - `tool`: Starts a tmux session to control output of other scripts.
+- `with async`: Runs interactive prompts like a shell or psql without blocking the command chain.
 - `with menu`: Provides a menu to choose options from other `with` helpers from.
 - `with pg`: Sets up a temporary database to run tests against. Inspired by [PostgREST](https://github.com/PostgREST/postgrest/blob/main/test/with_tmp_db).
 - `with sql`: Wrapper to create schema from .sql file via psql.

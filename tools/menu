@@ -6,7 +6,7 @@ if [[ ! -v TMUX ]]; then
 fi
 
 tmux bind-key -n Escape "display-popup -C; run-shell $0" \
-  \; set-hook -g after-new-window "display-popup -C; run-shell -d 1 $0" \
+  \; set-hook -g after-new-window "display-popup -C; if-shell -F '#{m:!(async *):#W}' 'run-shell -d 1 $0'" \
   \; set -g remain-on-exit on
 
 ("$@")
@@ -27,8 +27,12 @@ show_key=0
       tool|menu)
         ;;
 
-      watcher*)
+      "watcher "*)
         echo "'Run again'" "r" "'send-keys -t $idx -H 20'"
+        ;;
+
+      "async "*)
+        echo "'Show \"$cmd\"'" $((++show_key)) "'setenv PG_DEV_ACTIVE_WINDOW $idx; select-window -t $idx'"
         ;;
 
       *)

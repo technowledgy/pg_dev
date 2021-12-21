@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+script_path="$(readlink -f "${BASH_SOURCE[0]}")"
+# shellcheck source=tools/async.args.bash
+source "$script_path.args.bash"
+
+if [[ ! -v TMUX ]]; then
+  exec "${_arg_leftovers[@]}"
+fi
+
+("${_arg_leftovers[@]}") &
+
+eval exec "$_arg_prompt"

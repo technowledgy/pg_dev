@@ -10,6 +10,7 @@ PATH="./tools:$PATH"
     with watcher \
     with pg \
     with sql test/schema.sql \
+    with async psql \
     with pg_prove test/passing.spec.sql
 
   run -1 \
@@ -18,11 +19,12 @@ PATH="./tools:$PATH"
     with watcher \
     with pg \
     with sql test/schema.sql \
+    with async psql \
     with pg_prove test/failing.spec.sql
 }
 
 @test "runs all helpers successfully without tool" {
-  # except watcher, as we don't want to hang
+  # except async and watcher, as we don't want to hang
 
   run -0 \
     with menu \
