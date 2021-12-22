@@ -12,6 +12,7 @@ source "$(which docker-entrypoint.sh)"
 case $1 in
   start)
     initdb --no-locale --nosync --auth=trust --username="$PGUSER"
+    POSTGRES_HOST_AUTH_METHOD=trust pg_setup_hba_conf
     pg_ctl -D "$PGDATA" -o "-p $PGPORT" -w start
     
     if [ "$PGDATABASE" != "postgres" ]; then
