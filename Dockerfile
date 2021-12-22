@@ -63,7 +63,7 @@ RUN mkfifo /var/log/stdout \
    ; ./Build install \
     ) \
 ### cleanup
-  ; rm -rf -- * \
+  ; rm -rf -- /usr/src/* /tmp/* \
   ; apk del --no-cache build-deps
 
 FROM base AS test
