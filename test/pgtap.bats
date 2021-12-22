@@ -12,3 +12,10 @@ PATH="./tools:$PATH"
     with sql test/schema.sql \
     with pg_prove test/failing.spec.sql
 }
+
+@test "pgtap is accessible by all users" {
+  run -0 \
+    with pg \
+    with sql test/schema.sql \
+    with pg_prove test/setrole.spec.sql
+}
