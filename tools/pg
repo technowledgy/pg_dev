@@ -20,7 +20,7 @@ maxport="$(find_max_port)"
 
 docker_setup_env
 
-PGDATA="$(mktemp -d)"
+PGDATA="$(mktemp -d --suffix=.pgdata)"
 PGDATABASE="$POSTGRES_DB"
 PGHOST=""
 PGPORT="$((${maxport:-5431} + 1))"

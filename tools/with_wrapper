@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+channel="$1"
+shift 1
+
 # Fix dead pane scroll issue
 echo
 
 tmux pipe-pane 'cat >> /var/log/stdout'
 
-trap 'tmux wait -S $PG_DEV_WINDOW' EXIT
+trap 'tmux wait -S $channel' EXIT
 
 ("$@")

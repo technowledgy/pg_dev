@@ -17,10 +17,14 @@ cmd="$(echo "$@" | sed -E 's/ [^ ]*with .+//g')"
 
 readarray -t pg_env < <(env | grep '^PG' | sed -E 's/^(.+)/-e\n\1/g')
 
+channel="$(mktemp --suffix=.channel)"
+
 tmux new-window -k -t "$PG_DEV_WINDOW" \
                 "${detached[@]}" \
                 "${pg_env[@]}" \
                 -n "$cmd" \
-                "$(dirname "$0")/with_wrapper" "$@" \
+                "$(dirname "$0")/with_wrapper" "$channel" "$@" \
      \; \
-     wait "$PG_DEV_WINDOW"
+     wait "$channel"
+
+rm "$channel"
