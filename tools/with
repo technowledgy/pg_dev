@@ -4,6 +4,7 @@ set -Eeuo pipefail
 script_path="$(readlink -f "${BASH_SOURCE[0]}")"
 # shellcheck source=tools/with.args.bash
 source "$script_path.args.bash"
+
 if [[ ! -v TMUX ]]; then
   exec "$@"
 fi
@@ -16,7 +17,9 @@ if [ "${PG_DEV_ACTIVE_WINDOW:-$PG_DEV_WINDOW}" -lt "$PG_DEV_WINDOW" ]; then
   detached[0]="-d"
 fi
 
-cmd="$(echo "$@" | sed -E 's/ [^ ]*with .+//g')"
+if [ -z "$_arg_label" ]; then
+  _arg_label="$(echo "$@" | sed -E 's/ [^ ]*with .+//g')"
+fi
 
 readarray -t pg_env < <(env | grep '^PG' | sed -E 's/^(.+)/-e\n\1/g')
 
@@ -25,7 +28,7 @@ channel="$(mktemp --suffix=.channel)"
 tmux new-window -k -t "$PG_DEV_WINDOW" \
                 "${detached[@]}" \
                 "${pg_env[@]}" \
-                -n "$cmd" \
+                -n "$_arg_label" \
                 "$(dirname "$0")/with_wrapper" "$channel" "${_arg_leftovers[@]}" \
      \; \
      wait "$channel"

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# ARG_OPTIONAL_SINGLE([label],[l],[Label to show in menu tool.],[])
 # ARG_HELP([This will run the command on a new tmux window and add an item to the menu tool.])
 # ARG_POSITIONAL_DOUBLEDASH([])
 # ARG_LEFTOVERS([command])
@@ -22,7 +23,7 @@ die()
 
 begins_with_short_option()
 {
-	local first_option all_short_options='h'
+	local first_option all_short_options='lh'
 	first_option="${1:0:1}"
 	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -31,13 +32,15 @@ begins_with_short_option()
 _positionals=()
 _arg_leftovers=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
+_arg_label=
 
 
 print_help()
 {
 	printf '%s\n' "This will run the command on a new tmux window and add an item to the menu tool."
-	printf 'Usage: %s [-h|--help] [--] ... \n' "$0"
+	printf 'Usage: %s [-l|--label <arg>] [-h|--help] [--] ... \n' "$0"
 	printf '\t%s\n' "... : command"
+	printf '\t%s\n' "-l, --label: Label to show in menu tool. (no default)"
 	printf '\t%s\n' "-h, --help: Prints help"
 }
 
@@ -59,6 +62,17 @@ parse_commandline()
 			break
 		fi
 		case "$_key" in
+			-l|--label)
+				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+				_arg_label="$2"
+				shift
+				;;
+			--label=*)
+				_arg_label="${_key##--label=}"
+				;;
+			-l*)
+				_arg_label="${_key##-l}"
+				;;
 			-h|--help)
 				print_help
 				exit 0
