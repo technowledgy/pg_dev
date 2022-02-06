@@ -5,6 +5,6 @@ script_path="$(readlink -f "${BASH_SOURCE[0]}")"
 # shellcheck source=tools/sql.args.bash
 source "$script_path.args.bash"
 
-psql --no-password --no-psqlrc -v ON_ERROR_STOP=1 -f "$_arg_file"
+psql --port="${_arg_port:-$PGPORT}" --no-password --no-psqlrc -v ON_ERROR_STOP=1 -f "$_arg_file"
 
 ("${_arg_leftovers[@]}")
