@@ -9,11 +9,14 @@ fi
 
 source "$(which docker-entrypoint.sh)"
 
-case $1 in
+cmd="$1"
+shift 1
+
+case $cmd in
   start)
-    initdb --no-locale --nosync --auth=trust --username="$PGUSER"
+    initdb --encoding="UTF8" --no-locale --nosync --auth=trust --username="$PGUSER"
     POSTGRES_HOST_AUTH_METHOD=trust pg_setup_hba_conf
-    pg_ctl -D "$PGDATA" -o "-p $PGPORT" -w start
+    pg_ctl -D "$PGDATA" -o "-F" -w start "$@"
     
     if [ "$PGDATABASE" != "postgres" ]; then
       createdb "$PGDATABASE"
