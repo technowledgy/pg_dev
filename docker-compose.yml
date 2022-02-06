@@ -14,6 +14,13 @@ services:
     volumes:
       - ./:/mnt
 
+  argbash:
+    image: matejak/argbash:2.10.0
+    working_dir: /mnt
+    volumes:
+      - ./:/mnt
+    entrypoint: ./argbash
+
   bats:
     build:
       context: .
