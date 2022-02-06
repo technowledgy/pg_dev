@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-#
-# USAGE:
-# with_pg <command>
-# The command is executed with PostgreSQL available. PGHOST and PGPORT are set accordingly.
-# The database is shutdown and the cluster removed when the script exits.
-#
 set -Eeo pipefail
 
 source "$(which docker-entrypoint.sh)"
