@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# ARG_OPTIONAL_REPEATED([watch],[w],[folders or files to watch for changes])
-# ARG_HELP([This will execute the command and restart it when a file changes.])
+# ARG_HELP([This will run the command on a new tmux window and add an item to the menu tool.])
 # ARG_POSITIONAL_DOUBLEDASH([])
 # ARG_LEFTOVERS([command])
 # ARG_DEFAULTS_POS([])
@@ -23,7 +22,7 @@ die()
 
 begins_with_short_option()
 {
-	local first_option all_short_options='wh'
+	local first_option all_short_options='h'
 	first_option="${1:0:1}"
 	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -32,15 +31,13 @@ begins_with_short_option()
 _positionals=()
 _arg_leftovers=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
-_arg_watch=()
 
 
 print_help()
 {
-	printf '%s\n' "This will execute the command and restart it when a file changes."
-	printf 'Usage: %s [-w|--watch <arg>] [-h|--help] [--] ... \n' "$0"
+	printf '%s\n' "This will run the command on a new tmux window and add an item to the menu tool."
+	printf 'Usage: %s [-h|--help] [--] ... \n' "$0"
 	printf '\t%s\n' "... : command"
-	printf '\t%s\n' "-w, --watch: folders or files to watch for changes (empty by default)"
 	printf '\t%s\n' "-h, --help: Prints help"
 }
 
@@ -62,17 +59,6 @@ parse_commandline()
 			break
 		fi
 		case "$_key" in
-			-w|--watch)
-				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
-				_arg_watch+=("$2")
-				shift
-				;;
-			--watch=*)
-				_arg_watch+=("${_key##--watch=}")
-				;;
-			-w*)
-				_arg_watch+=("${_key##-w}")
-				;;
 			-h|--help)
 				print_help
 				exit 0

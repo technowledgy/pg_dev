@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# ARG_OPTIONAL_BOOLEAN([ci],[],[Enable CI mode. Do not use tmux, but report exit code.])
 # ARG_POSITIONAL_DOUBLEDASH([])
 # ARG_LEFTOVERS([command])
 # ARG_DEFAULTS_POS([])
@@ -20,25 +19,15 @@ die()
 }
 
 
-begins_with_short_option()
-{
-	local first_option all_short_options=''
-	first_option="${1:0:1}"
-	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
-}
-
 # THE DEFAULTS INITIALIZATION - POSITIONALS
 _positionals=()
 _arg_leftovers=()
-# THE DEFAULTS INITIALIZATION - OPTIONALS
-_arg_ci="off"
 
 
 print_help()
 {
-	printf 'Usage: %s [--(no-)ci] [--] ... \n' "$0"
+	printf 'Usage: %s [--] ... \n' "$0"
 	printf '\t%s\n' "... : command"
-	printf '\t%s\n' "--ci, --no-ci: Enable CI mode. Do not use tmux, but report exit code. (off by default)"
 }
 
 
@@ -47,28 +36,9 @@ parse_commandline()
 	_positionals_count=0
 	while test $# -gt 0
 	do
-		_key="$1"
-		if test "$_key" = '--'
-		then
-			shift
-			test $# -gt 0 || break
-			_positionals+=("$@")
-			_positionals_count=$((_positionals_count + $#))
-			shift $(($# - 1))
-			_last_positional="$1"
-			break
-		fi
-		case "$_key" in
-			--no-ci|--ci)
-				_arg_ci="on"
-				test "${1:0:5}" = "--no-" && _arg_ci="off"
-				;;
-			*)
-				_last_positional="$1"
-				_positionals+=("$_last_positional")
-				_positionals_count=$((_positionals_count + 1))
-				;;
-		esac
+		_last_positional="$1"
+		_positionals+=("$_last_positional")
+		_positionals_count=$((_positionals_count + 1))
 		shift
 	done
 }

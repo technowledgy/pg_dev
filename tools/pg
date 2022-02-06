@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeo pipefail
 
+script_path="$(readlink -f "${BASH_SOURCE[0]}")"
+# shellcheck source=tools/pg.args.bash
+source "$script_path.args.bash"
+
 source "$(which docker-entrypoint.sh)"
 
 # finds the max port number of currently active postgresql sockets
@@ -25,4 +29,4 @@ trap '$(dirname "$0")/pg_runner stop' EXIT
 
 "$(dirname "$0")/pg_runner" start
 
-("$@")
+("${_arg_leftovers[@]}")

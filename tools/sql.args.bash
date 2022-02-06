@@ -3,6 +3,7 @@
 # ARG_OPTIONAL_SINGLE([port],[p],[PostgreSQL port to connect to. Defaults to PGPORT.],[])
 # ARG_POSITIONAL_SINGLE([file],[.sql file to load.])
 # ARG_HELP([This will load file with psql and then run command.])
+# ARG_POSITIONAL_DOUBLEDASH([])
 # ARG_LEFTOVERS([command])
 # ARG_DEFAULTS_POS([])
 # ARGBASH_GO()
@@ -39,7 +40,7 @@ _arg_port=
 print_help()
 {
 	printf '%s\n' "This will load file with psql and then run command."
-	printf 'Usage: %s [-p|--port <arg>] [-h|--help] <file> ... \n' "$0"
+	printf 'Usage: %s [-p|--port <arg>] [-h|--help] [--] <file> ... \n' "$0"
 	printf '\t%s\n' "<file>: .sql file to load."
 	printf '\t%s\n' "... : command"
 	printf '\t%s\n' "-p, --port: PostgreSQL port to connect to. Defaults to PGPORT. (no default)"
@@ -53,6 +54,16 @@ parse_commandline()
 	while test $# -gt 0
 	do
 		_key="$1"
+		if test "$_key" = '--'
+		then
+			shift
+			test $# -gt 0 || break
+			_positionals+=("$@")
+			_positionals_count=$((_positionals_count + $#))
+			shift $(($# - 1))
+			_last_positional="$1"
+			break
+		fi
 		case "$_key" in
 			-p|--port)
 				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1

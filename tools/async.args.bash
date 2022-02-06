@@ -2,6 +2,7 @@
 
 # ARG_POSITIONAL_SINGLE([prompt],[Interactive command to run.])
 # ARG_HELP([This will run continue the command chain immediately and run prompt non-blocking.])
+# ARG_POSITIONAL_DOUBLEDASH([])
 # ARG_LEFTOVERS([command])
 # ARG_DEFAULTS_POS([])
 # ARGBASH_GO()
@@ -37,7 +38,7 @@ _arg_leftovers=()
 print_help()
 {
 	printf '%s\n' "This will run continue the command chain immediately and run prompt non-blocking."
-	printf 'Usage: %s [-h|--help] <prompt> ... \n' "$0"
+	printf 'Usage: %s [-h|--help] [--] <prompt> ... \n' "$0"
 	printf '\t%s\n' "<prompt>: Interactive command to run."
 	printf '\t%s\n' "... : command"
 	printf '\t%s\n' "-h, --help: Prints help"
@@ -50,6 +51,16 @@ parse_commandline()
 	while test $# -gt 0
 	do
 		_key="$1"
+		if test "$_key" = '--'
+		then
+			shift
+			test $# -gt 0 || break
+			_positionals+=("$@")
+			_positionals_count=$((_positionals_count + $#))
+			shift $(($# - 1))
+			_last_positional="$1"
+			break
+		fi
 		case "$_key" in
 			-h|--help)
 				print_help
