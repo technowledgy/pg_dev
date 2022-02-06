@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+find tools -type f -iname '*.args.bash' | xargs -n1 argbash --strip=user-content -i
+chmod 644 tools/*.args.bash

@@ -6,17 +6,24 @@ on:
       - main
 
 jobs:
-  lint:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.4.0
       - name: Hadolint
         run: docker compose run --rm hadolint Dockerfile
+        if: always()
       - name: Shellcheck
         run: docker compose run --rm shellcheck tools/*
+        if: always()
+      - name: Argbash
+        run: |
+          docker compose run --rm argbash
+          git diff --exit-code
+        if: always()
 
   build-test-push:
-    needs: lint
+    needs: check
     strategy:
       matrix:
         pg:
