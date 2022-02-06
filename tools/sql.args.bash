@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# ARG_OPTIONAL_SINGLE([port],[p],[PostgreSQL port to connect to. Defaults to PGPORT.],[])
 # ARG_POSITIONAL_SINGLE([file],[.sql file to load.])
 # ARG_HELP([This will load file with psql and then run command.])
 # ARG_LEFTOVERS([command])
@@ -22,7 +23,7 @@ die()
 
 begins_with_short_option()
 {
-	local first_option all_short_options='h'
+	local first_option all_short_options='ph'
 	first_option="${1:0:1}"
 	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
 }
@@ -32,14 +33,16 @@ _positionals=()
 _arg_file=
 _arg_leftovers=()
 # THE DEFAULTS INITIALIZATION - OPTIONALS
+_arg_port=
 
 
 print_help()
 {
 	printf '%s\n' "This will load file with psql and then run command."
-	printf 'Usage: %s [-h|--help] <file> ... \n' "$0"
+	printf 'Usage: %s [-p|--port <arg>] [-h|--help] <file> ... \n' "$0"
 	printf '\t%s\n' "<file>: .sql file to load."
 	printf '\t%s\n' "... : command"
+	printf '\t%s\n' "-p, --port: PostgreSQL port to connect to. Defaults to PGPORT. (no default)"
 	printf '\t%s\n' "-h, --help: Prints help"
 }
 
@@ -51,6 +54,17 @@ parse_commandline()
 	do
 		_key="$1"
 		case "$_key" in
+			-p|--port)
+				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+				_arg_port="$2"
+				shift
+				;;
+			--port=*)
+				_arg_port="${_key##--port=}"
+				;;
+			-p*)
+				_arg_port="${_key##-p}"
+				;;
 			-h|--help)
 				print_help
 				exit 0
