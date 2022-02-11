@@ -11,6 +11,7 @@ SHELL ["/bin/sh", "-eux", "-c"]
 
 COPY tools /usr/local/bin
 COPY initdb /docker-entrypoint-initdb.d
+COPY ext /usr/local/share/postgresql/extension
 
 ### set up multi-process logging
 RUN mkfifo /var/log/stdout \
@@ -19,6 +20,7 @@ RUN mkfifo /var/log/stdout \
         --no-cache \
         coreutils \
         entr \
+        git \
 # to silence initdb "locale not found" warnings
         musl-locales \
         perl \
@@ -30,7 +32,6 @@ RUN mkfifo /var/log/stdout \
         --no-cache \
         --virtual build-deps \
         build-base \
-        git \
         perl-dev \
         perl-module-build \
         perl-test-deep \

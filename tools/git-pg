@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+remote="$(mktemp -d --suffix=.gitpg)"
+trap 'rm -rf $remote' EXIT
+git --work-tree="$remote" checkout HEAD -- .
+
+local="$(pwd)"
+
+entrypoint="$(realpath --relative-to="$local" "$1")"
+
+tools="$(dirname "$0")"
+
+"$tools/pg3" \
+  "$tools/sql" -p 5433 "$tools/git-pg-helpers.sql" -- \
+  "$tools/sql" -p 5434 "$tools/git-pg-helpers.sql" -- \
+  "$tools/with" -l "git-pg: psql remote" -- "$tools/sql" -p 5433 "$remote/$entrypoint" -- \
+  "$tools/with" -l "git-pg: psql local" -- "$tools/sql" -p 5434 "$local/$entrypoint" -- \
+  "$tools/with" -l "git-pg: diff remote->local" -- "$tools/sql" -p 5432 "$tools/git-pg-diff.sql"

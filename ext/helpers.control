@@ -1,0 +1,4 @@
+directory = 'extension/git'
+default_version = '1'
+superuser = true
+schema = 'git'
