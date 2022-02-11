@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -Eeo pipefail
+
+source "$(which docker-entrypoint.sh)"
+
+docker_setup_env
+
+tmpdir="$(mktemp -d --suffix=.pg3)"
+
+if [ "$(id -u)" = '0' ]; then
+  chown postgres:postgres "$tmpdir"
+fi
+
+PGHOST=""
+PGDATABASE="$POSTGRES_DB"
+PGUSER="$POSTGRES_USER"
+export PGDATABASE PGHOST PGUSER
+
+function start() {
+  mkdir "$tmpdir/$1"
+  touch "$tmpdir/$1.log"
+  tail -f "$tmpdir/$1.log" | sed "s/.*/$1: &/" &
+  PGDATA="$tmpdir/$1" PGPORT="$2" "$(dirname "$0")/pg_runner" start -o "-h ''" >> "$tmpdir/$1.log" 2>&1
+}
+
+function stop() {
+  PGDATA="$tmpdir/$1" "$(dirname "$0")/pg_runner" stop | sed "s/.*/$1: &/" >> "$tmpdir/$1.log" 2>&1
+}
+
+trap 'stop control; stop remote; stop local; kill 0; rm -rf "$tmpdir"' EXIT
+
+start control 5432
+start remote 5433
+start local 5434
+
+export PGPORT=5432
+
+("$@")

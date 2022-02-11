@@ -33,3 +33,4 @@ services:
     build: .
     volumes:
       - ./:/usr/src
+      - ./ext/git:/usr/local/share/postgresql/extension/git
