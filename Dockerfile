@@ -3,7 +3,7 @@ ARG PG_VERSION=14.2
 FROM postgres:${PG_VERSION}-alpine AS base
 
 LABEL author Wolfgang Walther
-LABEL maintainer pg-dev@technowledgy.de
+LABEL maintainer opensource@technowledgy.de
 LABEL license MIT
 
 WORKDIR /usr/src
