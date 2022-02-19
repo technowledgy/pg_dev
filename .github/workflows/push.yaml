@@ -51,7 +51,7 @@ jobs:
         with:
           build-args: PG_MAJOR=${{ matrix.pg }}
           push: true
-          tags: technowledgy/pg_dev:${{ matrix.pg }}-alpine
+          tags: technowledgy/pg_dev:pg${{ matrix.pg }}
 
   dockerhub:
     needs: build-test-push
