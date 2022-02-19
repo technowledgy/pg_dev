@@ -26,12 +26,7 @@ jobs:
     needs: check
     strategy:
       matrix:
-        pg:
-          - '10.20'
-          - '11.15'
-          - '12.10'
-          - '13.6'
-          - '14.2'
+        pg: [10, 11, 12, 13, 14]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.4.0
@@ -43,18 +38,18 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v2.9.0
         with:
-          build-args: PG_VERSION=${{ matrix.pg }}
+          build-args: PG_MAJOR=${{ matrix.pg }}
       - name: Build Test
         uses: docker/build-push-action@v2.9.0
         with:
-          build-args: PG_VERSION=${{ matrix.pg }}
+          build-args: PG_MAJOR=${{ matrix.pg }}
           target: test
       - name: Test
         run: DOCKER_BUILDKIT=1 docker compose run --rm bats test
       - name: Push
         uses: docker/build-push-action@v2.9.0
         with:
-          build-args: PG_VERSION=${{ matrix.pg }}
+          build-args: PG_MAJOR=${{ matrix.pg }}
           push: true
           tags: technowledgy/pg_dev:${{ matrix.pg }}-alpine
 

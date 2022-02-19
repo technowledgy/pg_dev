@@ -1,7 +1,13 @@
-ARG PG_VERSION=14.2
+ARG PG_MAJOR=14
 
-FROM postgres:${PG_VERSION}-alpine AS base
+FROM postgres:10.20-alpine AS pg10
+FROM postgres:11.15-alpine AS pg11
+FROM postgres:12.10-alpine AS pg12
+FROM postgres:13.6-alpine AS pg13
+FROM postgres:14.2-alpine AS pg14
 
+# hadolint ignore=DL3006
+FROM pg${PG_MAJOR} AS base
 LABEL author Wolfgang Walther
 LABEL maintainer opensource@technowledgy.de
 LABEL license MIT
@@ -12,6 +18,15 @@ SHELL ["/bin/sh", "-eux", "-c"]
 COPY tools /usr/local/bin
 COPY initdb /docker-entrypoint-initdb.d
 COPY ext /usr/local/share/postgresql/extension
+
+# renovate: datasource=github-tags depName=pg_prove lookupName=theory/tap-parser-sourcehandler-pgtap
+ARG PG_PROVE_VERSION=v3.35
+
+# renovate: datasource=github-tags depName=pgtap lookupName=theory/pgtap
+ARG PGTAP_VERSION=v1.2.0
+
+# renovate: datasource=github-tags depName=TAP::Harness::JUnit lookupName=jlavallee/tap-harness-junit
+ARG TAP_HARNESS_JUNIT_VERSION=v0.40
 
 ### set up multi-process logging
 RUN mkfifo /var/log/stdout \
@@ -39,7 +54,7 @@ RUN mkfifo /var/log/stdout \
         perl-test-pod-coverage \
         su-exec \
 ### pg_prove
-  ; git clone --depth 1 --branch develop https://github.com/theory/tap-parser-sourcehandler-pgtap \
+  ; git clone --depth 1 --branch ${PG_PROVE_VERSION} https://github.com/theory/tap-parser-sourcehandler-pgtap \
   ; (cd tap-parser-sourcehandler-pgtap \
    ; perl Build.PL \
    ; ./Build \
@@ -47,7 +62,7 @@ RUN mkfifo /var/log/stdout \
    ; ./Build install \
     ) \
 ### pgtap
-  ; git clone --depth 1 --branch master https://github.com/theory/pgtap \
+  ; git clone --depth 1 --branch ${PGTAP_VERSION} https://github.com/theory/pgtap \
   ; (cd pgtap \
    ; make \
    ; make install \
@@ -56,7 +71,7 @@ RUN mkfifo /var/log/stdout \
    ; with pg with make test \
     ) \
 ### tap-harness-junit
-  ; git clone --depth 1 --branch master https://github.com/jlavallee/tap-harness-junit \
+  ; git clone --depth 1 --branch ${TAP_HARNESS_JUNIT_VERSION} https://github.com/jlavallee/tap-harness-junit \
   ; (cd tap-harness-junit \
    ; perl Build.PL \
    ; ./Build \

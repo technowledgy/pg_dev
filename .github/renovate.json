@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "config:base",
+    "docker:pinDigests",
+    "regexManagers:dockerfileVersions",
+    "schedule:earlyMondays"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "matchPackageNames": ["postgres"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["postgres"],
+      "groupName": "postgres"
+    }
+  ]
+}
