@@ -1,10 +1,10 @@
 ARG PG_MAJOR=14
 
-FROM postgres:10.20-alpine AS pg10
-FROM postgres:11.15-alpine AS pg11
-FROM postgres:12.10-alpine AS pg12
-FROM postgres:13.6-alpine AS pg13
-FROM postgres:14.2-alpine AS pg14
+FROM postgres:10.20-alpine@sha256:6dfe9597923b85ad3843a9796922e94db9e5b5cb4916b5840878394e42382bdb AS pg10
+FROM postgres:11.15-alpine@sha256:386802b61d7226cdcf8710ed6e5e46f993e0da1f3dd2e829cbab12ee91b888ad AS pg11
+FROM postgres:12.10-alpine@sha256:b5da30d2ba744fe890fa18695e201cea1366491be287a74b8d7709da8a5b9304 AS pg12
+FROM postgres:13.6-alpine@sha256:a003a8ef4aed3ec511525efe9230da56d5368f53f6033cb241154dd6781ffd23 AS pg13
+FROM postgres:14.2-alpine@sha256:4d15d2b95bd31318b07069dd6bff3447626df6258bbf33daef21365b7824902e AS pg14
 
 # hadolint ignore=DL3006
 FROM pg${PG_MAJOR} AS base
