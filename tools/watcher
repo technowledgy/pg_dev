@@ -10,8 +10,5 @@ if [[ -v PG_DEV_CI ]]; then
 fi
 
 while true; do
-  (ag -l --vimgrep '' "${_arg_watch[@]}" | entr -dr "${_arg_leftovers[@]}")
-  if [ ! "$?" -eq "2" ]; then
-    exit
-  fi
+  (! ag -l --vimgrep '' "${_arg_watch[@]}" | entr -dr "${_arg_leftovers[@]}")
 done
