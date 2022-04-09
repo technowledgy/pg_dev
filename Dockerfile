@@ -6,6 +6,9 @@ FROM postgres:12.10-alpine@sha256:cddcec5ae29d5194a9a7855df700369d056d17b75b06d0
 FROM postgres:13.6-alpine@sha256:816e8a48deff56ecc585908c5117888b469f70b4cb7d3eddf55aaab21caa8cdf AS pg13
 FROM postgres:14.2-alpine@sha256:a61f92508f5a83a12419171e9446bab762c73e68f49ae3e63593a43e7a1d7f11 AS pg14
 
+# patched pg14 with security_invoker for views
+FROM technowledgy/postgres:14-alpine@sha256:d65819d9d5919858013eb25505c22dcc08f43545939bc2ef463d0828affa09ca AS pg14-invoker
+
 # hadolint ignore=DL3006
 FROM pg${PG_MAJOR} AS base
 LABEL author Wolfgang Walther
