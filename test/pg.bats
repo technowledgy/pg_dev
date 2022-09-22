@@ -20,3 +20,11 @@ PATH="./tools:$PATH"
     with sh -c 'echo -n =====WHOAMI=====; whoami'
   assert_output --partial "=====WHOAMI=====test"
 }
+
+@test "with pg runs command with current user (without passwd entry)" {
+  run -0 \
+    su-exec 1234:1235 \
+    with pg \
+    with sh -c 'echo -n =====WHOAMI=====; id'
+  assert_output --partial "=====WHOAMI=====uid=1234 gid=1235 groups=1235"
+}

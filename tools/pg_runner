@@ -14,7 +14,19 @@ shift 1
 
 case $cmd in
   start)
+    # fake current user for initdb if container was started with arbitrary UID
+    uid="$(id -u)"
+    if ! getent passwd "$uid" &> /dev/null; then
+      gid="$(id -g)"
+      NSS_WRAPPER_PASSWD="$(mktemp)"
+      NSS_WRAPPER_GROUP="$(mktemp)"
+      echo "postgres:x:$uid:$gid:PostgreSQL:$PGDATA:/bin/false" > "$NSS_WRAPPER_PASSWD"
+      echo "postgres:x:$gid" > "$NSS_WRAPPER_GROUP"
+      export NSS_WRAPPER_PASSWD NSS_WRAPPER_GROUP LD_PRELOAD=/usr/lib/libnss_wrapper.so
+    fi
     initdb --encoding="UTF8" --no-locale --nosync --auth=trust --username="$PGUSER"
+    unset LD_PRELOAD
+
     POSTGRES_HOST_AUTH_METHOD=trust pg_setup_hba_conf
     pg_ctl -D "$PGDATA" -o "-F" -w start "$@"
     

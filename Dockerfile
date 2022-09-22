@@ -37,7 +37,10 @@ RUN mkfifo /var/log/stdout \
 ### install deps
   ; apk add \
         --no-cache \
+        # nss_wrapper is currently only available in testing
+        --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing \
         coreutils \
+        nss_wrapper \
         entr \
         git \
 # to silence initdb "locale not found" warnings
