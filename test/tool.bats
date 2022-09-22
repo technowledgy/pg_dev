@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+bats_require_minimum_version 1.5.0
 PATH="./tools:$PATH"
 
 @test "runs all helpers successfully in CI" {
