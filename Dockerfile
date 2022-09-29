@@ -24,7 +24,7 @@ COPY initdb /docker-entrypoint-initdb.d
 COPY ext /usr/local/share/postgresql/extension
 
 # renovate: datasource=github-tags depName=pg_prove lookupName=theory/tap-parser-sourcehandler-pgtap versioning=perl
-ARG PG_PROVE_VERSION=v3.35
+ARG PG_PROVE_VERSION=v3.36
 
 # renovate: datasource=github-tags depName=pgtap lookupName=theory/pgtap
 ARG PGTAP_VERSION=v1.2.0
