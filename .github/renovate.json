@@ -2,8 +2,7 @@
   "extends": [
     "config:base",
     "docker:pinDigests",
-    "regexManagers:dockerfileVersions",
-    "schedule:earlyMondays"
+    "regexManagers:dockerfileVersions"
   ],
   "packageRules": [
     {
