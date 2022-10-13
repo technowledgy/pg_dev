@@ -7,21 +7,24 @@ source "$script_path.args.bash"
 
 source "$(which docker-entrypoint.sh)"
 
-# finds the max port number of currently active postgresql sockets
-function find_max_port() {
-  find /var/run/postgresql -maxdepth 1 -type s \
-  | sed -re 's/^.*\.([0-9]+)$/\1/g' \
-  | sort -nr \
-  | head -n1
-}
-maxport="$(find_max_port)"
+if [ -z "$PGPORT" ]; then
+  # finds the next free port number taking into account currently active postgresql sockets
+  PGPORT=5432
+  until [ ! -e "/var/run/postgresql/.s.PGSQL.$PGPORT" ]; do
+    ((PGPORT++))
+  done
+else
+  # if port is given, wait until port is available
+  until [ ! -e "/var/run/postgresql/.s.PGSQL.$PGPORT" ]; do
+    sleep 0.1
+  done
+fi
 
 docker_setup_env
 
 PGDATA="$(mktemp -d --suffix=.pgdata)"
 PGDATABASE="$POSTGRES_DB"
 PGHOST=""
-PGPORT="$((${maxport:-5431} + 1))"
 PGUSER="$POSTGRES_USER"
 export PGDATA PGDATABASE PGHOST PGPORT PGUSER
 
