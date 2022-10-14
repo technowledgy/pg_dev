@@ -5,7 +5,7 @@ FROM postgres:11.17-alpine@sha256:78cdbb9d0f0628cc4e0a912f2a205a972f214eaa918d51
 FROM postgres:12.12-alpine@sha256:f9ab941a725554846830bdb3622e224c597a10936873f15618ad7885627a9856 AS pg12
 FROM postgres:13.8-alpine@sha256:b5c7c10637b21dbbb8b30593cd91235ec06da12b56ebab8024b3def499d6ed15 AS pg13
 FROM postgres:14.5-alpine@sha256:377e707c672fd6bc4463037d2c84bb1d22476088026c4b014710b09e71c782f0 AS pg14
-FROM postgres:15rc2-alpine@sha256:9791d2a5e509374a2e5a0db6dd9f48c8288524b1aebaff22d1ac57163ae205bb AS pg15
+FROM postgres:15-alpine@sha256:f46b2ae1a00a87552a52fe83d36f7aef60ef61f9d64baf3bfc4abaa89847024b AS pg15
 
 # patched pg14 with security_invoker for views
 FROM technowledgy/postgres:14-alpine@sha256:5af73fea812760f9eb2267fdfe6c4ddd5e2af360bbf22a12706cd1f265b517fb AS pg14-invoker
