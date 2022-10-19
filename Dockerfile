@@ -8,7 +8,7 @@ FROM postgres:14.5-alpine@sha256:377e707c672fd6bc4463037d2c84bb1d22476088026c4b0
 FROM postgres:15-alpine@sha256:f46b2ae1a00a87552a52fe83d36f7aef60ef61f9d64baf3bfc4abaa89847024b AS pg15
 
 # patched pg14 with security_invoker for views
-FROM technowledgy/postgres:14-alpine@sha256:5af73fea812760f9eb2267fdfe6c4ddd5e2af360bbf22a12706cd1f265b517fb AS pg14-invoker
+FROM technowledgy/postgres:14-alpine@sha256:7c0f1aa810a52f179ea14ae0ba96963221488cc4d0984ad7a098288498fd3cd2 AS pg14-invoker
 
 # hadolint ignore=DL3006
 FROM pg${PG_MAJOR} AS base
