@@ -38,7 +38,7 @@ RUN mkfifo /var/log/stdout \
   ; apk add \
         --no-cache \
         # nss_wrapper is currently only available in testing
-        --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing \
+        --repository https://dl-cdn.alpinelinux.org/alpine/edge/community \
         coreutils \
         nss_wrapper \
         entr \
