@@ -1,6 +1,6 @@
 # pg_dev
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/technowledgy/pg_dev/Push%20to%20main)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/technowledgy/pg_dev/push.yaml?branch=main)
 ![GitHub](https://img.shields.io/github/license/technowledgy/pg_dev)
 
 This images uses the official postgres docker image as a base and adds tooling for development. It's considered a drop-in replacement during development, while running the official image in production.
