@@ -26,7 +26,7 @@ COPY ext /usr/local/share/postgresql/extension
 ARG PG_PROVE_VERSION=v3.36
 
 # renovate: datasource=github-tags depName=pgtap lookupName=theory/pgtap
-ARG PGTAP_VERSION=v1.3.1
+ARG PGTAP_VERSION=v1.3.2
 
 # renovate: datasource=github-tags depName=TAP::Harness::JUnit lookupName=jlavallee/tap-harness-junit versioning=perl
 ARG TAP_HARNESS_JUNIT_VERSION=v0.40
