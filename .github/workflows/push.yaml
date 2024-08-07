@@ -36,18 +36,18 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build
-        uses: docker/build-push-action@v6.6.0
+        uses: docker/build-push-action@v6.6.1
         with:
           build-args: PG_MAJOR=${{ matrix.pg }}
       - name: Build Test
-        uses: docker/build-push-action@v6.6.0
+        uses: docker/build-push-action@v6.6.1
         with:
           build-args: PG_MAJOR=${{ matrix.pg }}
           target: test
       - name: Test
         run: DOCKER_BUILDKIT=1 docker compose run --rm bats test
       - name: Push
-        uses: docker/build-push-action@v6.6.0
+        uses: docker/build-push-action@v6.6.1
         with:
           build-args: PG_MAJOR=${{ matrix.pg }}
           push: true
