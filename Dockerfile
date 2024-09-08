@@ -1,6 +1,6 @@
 ARG PG_MAJOR=16
 
-FROM postgres:12.20-alpine@sha256:1323a00e9df1dc86e69dd21e9b08f4fb894970f498818b7e69e30c52d1235fcf AS pg12
+FROM postgres:12.20-alpine@sha256:76685db4bc5175623bc5d8fa68d6c9ba548aeccd764158709b781ba3c37b8d44 AS pg12
 FROM postgres:13.16-alpine@sha256:289f907995885bbdee65c272811524b9d0e5d2cb2cafff72fdb022700b460d7a AS pg13
 FROM postgres:14.13-alpine@sha256:2d28cf41ec156f9a6dc9489fd3e5b59888f89229d68fc622efbfbe576e114b13 AS pg14
 FROM postgres:15.8-alpine@sha256:620dc79c45816cff4f38f0b49c71f15a3bc6bab9439ba1eea3a76d23ebcf1e4d AS pg15
