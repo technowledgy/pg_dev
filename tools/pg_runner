@@ -24,7 +24,8 @@ case $cmd in
       echo "postgres:x:$gid" > "$NSS_WRAPPER_GROUP"
       export NSS_WRAPPER_PASSWD NSS_WRAPPER_GROUP LD_PRELOAD=/usr/lib/libnss_wrapper.so
     fi
-    initdb --encoding="UTF8" --no-locale --nosync --auth=trust --username="$PGUSER"
+    # shellcheck disable=SC2086
+    initdb --encoding="UTF8" --no-locale --nosync --auth=trust --username="$PGUSER" $POSTGRES_INITDB_ARGS
     unset LD_PRELOAD
 
     POSTGRES_HOST_AUTH_METHOD=trust pg_setup_hba_conf
