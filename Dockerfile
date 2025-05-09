@@ -1,10 +1,10 @@
 ARG PG_MAJOR=16
 
 FROM postgres:12.22-alpine@sha256:7c8f4870583184ebadf7f17a6513620aac5f365a7938dc6a6911c1d5df2f481a AS pg12
-FROM postgres:13.21-alpine@sha256:8dbfcd64c74df896dfa2979dfc7199e3756ab551b14707f06ab6671f040da63a AS pg13
-FROM postgres:14.18-alpine@sha256:0080a5c3b7a85e2569e641bd6e8afe8b7ed7ea19206a8fe69fb3d1db0d191aa3 AS pg14
-FROM postgres:15.13-alpine@sha256:709cfb93ad22e488a840e2ad96dcb41a1c3491736d97db4d7c5fbda7557fd760 AS pg15
-FROM postgres:16.9-alpine@sha256:caf35ad1688e1eb3482d354023c24cfadb85180cfa826e2d0063b7d489d4d2e3 AS pg16
+FROM postgres:13.21-alpine@sha256:333309a2fc3d724dae4de56b4a90b7fc2fc26f164040f3732a60ce92ca10d113 AS pg13
+FROM postgres:14.18-alpine@sha256:7b34339b53f2ec601120b648632fda5fff695c50e266ebbf24d9c7a1dffd3f57 AS pg14
+FROM postgres:15.13-alpine@sha256:5402d0a13eab398c7c38f1b90af081d7f9e5977606ed869cecdb661403f6586a AS pg15
+FROM postgres:16.9-alpine@sha256:7c8c4bf319769e3daf2545ba435248edc650d3621de678db6d9846581036e3da AS pg16
 
 # patched pg14 with security_invoker for views
 FROM technowledgy/postgres:14-alpine@sha256:9fa674f0d8c283f92957532a5e69d7c68213c9effd691eadbb0be7b80b408f44 AS pg14-invoker
