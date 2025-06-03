@@ -15,7 +15,7 @@ services:
       - ./:/mnt
 
   argbash:
-    image: matejak/argbash:2.10.0@sha256:fb483f4ace79729280b9f63ae9c5395f829fb39c41a06ae699ecf610ea1d5713
+    image: matejak/argbash:2.11.0@sha256:9d4cb031d9d7ea893dd84ac02d596bb32560725d6cd1cc19d8c8933019125148
     working_dir: /mnt
     volumes:
       - ./:/mnt
