@@ -7,7 +7,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
       - name: Hadolint
         run: docker compose run --rm hadolint Dockerfile
         if: always()
@@ -26,7 +26,7 @@ jobs:
         pg: [12, 13, 14, 14-invoker, 15, 16]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
       - name: Build
         uses: docker/build-push-action@v6.18.0
         with:
