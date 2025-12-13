@@ -23,7 +23,7 @@ jobs:
   build-test:
     strategy:
       matrix:
-        pg: [12, 13, 14, 14-invoker, 15, 16]
+        pg: [12, 13, 14, 15, 16]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6.0.1
